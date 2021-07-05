@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Cadastro de Despesas</title>
+</h:head>
+
+<body>
+<h:outputStylesheet library="css" name="stylesTable.css" />
+
+<h:form>
+<h:dataTable value="#{table.despesas}" var="d" styleClass="tabela" headerClass="cabecalho"
+	columnClasses="colNumero,colData,colDesc,colValor,colOp" rendered="#{table.despesas.rowCount > 0}"> <!-- A tabela so sera exibida se existirem elementos nela -->
+	<f:facet name="header">
+		Lista de Despesas
+	</f:facet>
+	
+	<h:column> <!-- Coluna dos numeros, mostra o numero de cada coluna utilizando o tableModel que se inicia a partir do numero 1 -->
+		<f:facet name="header">#</f:facet>
+		#{table.despesas.rowIndex + 1}
+	</h:column>
+	
+	<h:column>
+		<f:facet name="header">Data</f:facet>
+
+		<h:outputText value="#{d.data}" rendered="#{!d.edit}"><!--(EDIT = FALSE) SE NAO ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O Q ESTA DENTRO DO OUTPUTTEXT -->
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</h:outputText>
+		<h:inputText value="#{d.data}" rendered="#{d.edit}" styleClass="smallInput"><!--(EDIT = TRUE) SE ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O INPUTTEXT, PARA EDICAO DA DATA -->
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</h:inputText>
+	</h:column>
+	
+	<h:column>
+		<f:facet name="header">Descrição</f:facet>
+		
+		<h:outputText value="#{d.descricao}" rendered="#{!d.edit}" /><!--(EDIT = FALSE) SE NAO ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O Q ESTA DENTRO DO OUTPUTTEXT -->
+		<h:inputText value="#{d.descricao}" rendered="#{d.edit}" styleClass="bigInput" /><!--(EDIT = TRUE) SE ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O INPUTTEXT, PARA EDICAO DA DESCRICAO -->
+	</h:column>
+	
+	<h:column>
+		<f:facet name="header">Valor</f:facet>
+		
+		<h:outputText value="#{d.valor}" rendered="#{!d.edit}"><!--(EDIT = FALSE) SE NAO ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O Q ESTA DENTRO DO OUTPUTTEXT -->
+			<f:convertNumber type="currency" locale="pt_BR" /> <!-- Conversor de valor no padrão brasileiro -->
+		</h:outputText>
+		<h:inputText value="#{d.valor}" rendered="#{d.edit}" styleClass="smallInput" /><!--(EDIT = TRUE) SE ESTIVER EM MODO DE EDIÇÃO SERA MOSTRADO NA TELA O INPUTTEXT, PARA EDICAO DO VALOR -->
+	</h:column>
+	
+	<h:column>
+		<f:facet name="header">Operação</f:facet>
+		
+		<h:panelGroup rendered="#{!d.edit}"> <!-- Os botoes do painelGroup so estarao visiveis quando nao estiver em modo de edicao -->
+			<h:commandLink value="Alterar" action="#{table.editar(d)}" /> <!-- Chama o metodo editar ao clicar no botão, que recebe uma despesa -->
+		    <h:commandLink value="Excluir" action="#{table.excluir(d)}" />
+		</h:panelGroup>
+		<h:commandLink value="Gravar" action="#{table.gravar(d)}" rendered="#{d.edit}" /> <!-- Quando estiver em modo de edição o botao gravar estara visivel -->
+	</h:column>
+	
+</h:dataTable>
+
+<h:panelGroup rendered="#{table.despesas.rowCount == 0}"> <!-- Se nao houver nenhum registro a mensagem sera exibida -->
+	<h:outputText value="Não existem despesas cadastradas" styleClass="message" /><br /><br />
+</h:panelGroup>
+
+<h:commandButton value="Clique aqui para inserir um novo registro" action="#{table.inserir}" /> <!-- Grava a despesa. GRAVANDO EM MEMORIA -->
+</h:form>
+
+</body>
+</html>
