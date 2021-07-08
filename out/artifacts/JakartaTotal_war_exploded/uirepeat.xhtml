@@ -28,7 +28,7 @@
 			<th class="cabecalho">Operação</th>
 		</tr>
 
-		<ui:repeat value="#{uirepeat.despesas}" var="d" varStatus="st">
+		<ui:repeat value="#{uirepeat.despesas}" var="d" varStatus="st"> <!-- ui:repeat -> Funciona melhor dentro da interface de List -->
 			<tr>
 				<td class="colNumero">#{st.index + 1}</td><!-- Coluna dos numeros, mostra o numero de cada coluna utilizando o varStatus que se inicia a partir do numero 0 -->
 
